@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:nesttask/services/delete_task_service.dart';
+import 'package:nesttask/views/update_task.dart';
 import 'package:popover/popover.dart';
 
 import '../config/app_colors.dart';
@@ -7,14 +10,20 @@ class CustomCardWidget extends StatelessWidget {
   final String title;
   final String date;
   final IconData icon;
+  final taskId;
   final BuildContext context;
-  const CustomCardWidget({
+  Map<String, dynamic> data;
+  CustomCardWidget({
     super.key,
     required this.title,
     required this.date,
     required this.icon,
     required this.context,
+    required this.taskId,
+    required this.data,
   });
+
+  final deleteNoteService = Get.put(DeleteTaskService());
 
   @override
   Widget build(BuildContext context) {
@@ -64,57 +73,74 @@ class CustomCardWidget extends StatelessWidget {
                 await showPopover(
                     context: context,
                     bodyBuilder: (context) => Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.only(
+                            top: 10,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.edit_outlined,
-                                      size: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text(
-                                      "Edit",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall,
-                                    ),
-                                  ],
+                              InkWell(
+                                onTap: () {
+                                  Get.to(UpdateTask(
+                                    data: data,
+                                  ));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 8),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.edit_outlined,
+                                        size: 15,
+                                      ),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                        "Edit",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.delete_outline,
-                                    size: 15,
-                                    color: Colors.red,
+                              InkWell(
+                                onTap: () {
+                                  deleteNoteService.deleteNote(taskId);
+                                  Navigator.pop(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 8),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.delete_outline,
+                                        size: 15,
+                                        color: Colors.red,
+                                      ),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                        "Delete",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall
+                                            ?.copyWith(color: Colors.red),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    "Delete",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(color: Colors.red),
-                                  ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
                         ),
                     width: 115,
-                    height: 85,
+                    height: 88,
                     backgroundColor: AppColors.whiteColor,
                     direction: PopoverDirection.bottom);
               },

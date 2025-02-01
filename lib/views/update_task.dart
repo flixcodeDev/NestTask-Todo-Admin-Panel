@@ -3,20 +3,24 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nesttask/config/app_colors.dart';
 import 'package:nesttask/services/create_task_service.dart';
+import 'package:nesttask/services/update_task_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CreateTaskScreen extends StatefulWidget {
+class UpdateTask extends StatefulWidget {
+  Map<String, dynamic> data;
+  UpdateTask({super.key, required this.data});
+
   @override
-  _CreateTaskScreenState createState() => _CreateTaskScreenState();
+  _UpdateTaskScreenState createState() => _UpdateTaskScreenState();
 }
 
-class _CreateTaskScreenState extends State<CreateTaskScreen> {
+class _UpdateTaskScreenState extends State<UpdateTask> {
   final TextEditingController _courseTitleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
-  final createTaskService = Get.put(CreateTaskService());
+  final updateTaskService = Get.put(UpdateTaskService());
 
   DateTime? _selectedDate;
   final List<String> _categories = [
@@ -34,7 +38,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   void _selectStartDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _startDateController.text.isNotEmpty
+          ? DateTime.parse(widget.data["start_date"])
+          : DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
@@ -50,7 +56,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   void _selectEndDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _endDateController.text.isNotEmpty
+          ? DateTime.parse(widget.data["end_date"])
+          : DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
@@ -63,7 +71,29 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   }
 
   @override
+  void initState() {
+    _selectedCategory = widget.data["category"];
+    // Initialize controllers with existing data
+    _courseTitleController.text = widget.data["title"] ?? '';
+    _descriptionController.text = widget.data["content"] ?? '';
+
+    // Initialize date controllers if data exists
+    _startDateController.text = widget.data["start_date"] != null
+        ? DateFormat('MMM d, yyyy')
+            .format(DateTime.parse(widget.data["start_date"]))
+        : '';
+
+    _endDateController.text = widget.data["end_date"] != null
+        ? DateFormat('MMM d, yyyy')
+            .format(DateTime.parse(widget.data["end_date"]))
+        : '';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("This is my editable data: ${widget.data["content"]}");
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -101,14 +131,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 child: TextField(
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: AppColors.whiteColor, fontWeight: FontWeight.w500),
-                  controller: _courseTitleController,
+                  controller: _courseTitleController
+                    ..text = widget.data["title"] ?? '',
                   decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: 'Edit Name',
                       labelStyle: Theme.of(context)
                           .textTheme
                           .labelLarge
                           ?.copyWith(color: AppColors.whiteColor),
-                      hintText: 'Enter course title',
+                      hintText: 'Edit course title',
                       hintStyle: Theme.of(context)
                           .textTheme
                           .headlineSmall
@@ -129,7 +160,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   readOnly: true,
                   onTap: () => _selectStartDate(context),
                   decoration: InputDecoration(
-                    labelText: 'Start Date',
+                    labelText: 'Edit Start Date',
                     labelStyle: Theme.of(context)
                         .textTheme
                         .labelLarge
@@ -159,7 +190,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   readOnly: true,
                   onTap: () => _selectEndDate(context),
                   decoration: InputDecoration(
-                    labelText: 'End Date',
+                    labelText: 'Edit End Date',
                     labelStyle: Theme.of(context)
                         .textTheme
                         .labelLarge
@@ -192,10 +223,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     children: [
                       // Description
                       TextField(
-                        controller: _descriptionController,
+                        controller: _descriptionController
+                          ..text = widget.data["content"] ?? '',
                         maxLines: 5,
                         decoration: const InputDecoration(
-                          labelText: 'Description',
+                          labelText: 'Edit Description',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           hintText: 'Write your task description here...',
                         ),
@@ -253,13 +285,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             vertical: 16, horizontal: 16),
                         child: ElevatedButton(
                           onPressed: () async {
-                            createTaskService.createTask(
-                                context: context,
-                                title: _courseTitleController.text,
-                                course: _descriptionController.text,
-                                startDate: _startDateController.text,
-                                endDate: _endDateController.text,
-                                category: _selectedCategory);
+                            await updateTaskService.updateTask(
+                              widget.data["id"], // Pass the task ID
+                              _courseTitleController.text,
+                              _descriptionController.text,
+                              _startDateController.text,
+                              _endDateController.text,
+                              _selectedCategory ?? widget.data["category"],
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.purple,
@@ -268,7 +301,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                           ),
                           child: const Text(
-                            'Create Task',
+                            'Edit Task',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
