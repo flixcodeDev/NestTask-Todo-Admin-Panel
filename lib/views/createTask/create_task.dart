@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nesttask/config/app_colors.dart';
 import 'package:nesttask/services/create_task_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   @override

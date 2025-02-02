@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:nesttask/views/dashboard/admin_dashboard.dart';
-import 'package:nesttask/views/create_task.dart';
-import 'package:nesttask/views/task_management.dart';
+import 'package:nesttask/views/createTask/create_task.dart';
+import 'package:nesttask/views/searchData/search_view.dart';
+import 'package:nesttask/views/upcomingTask/task_management.dart';
 
-import '../config/app_colors.dart';
+import '../../config/app_colors.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class BottomNav extends StatefulWidget {
+  const BottomNav({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<BottomNav> createState() => _BottomNavState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _BottomNavState extends State<BottomNav> {
   int index = 0;
   List screens = [
     AdminDashboardScreen(),
     TaskManagementScreen(),
     CreateTaskScreen(),
+    SearchView(),
   ];
   @override
   Widget build(BuildContext context) {

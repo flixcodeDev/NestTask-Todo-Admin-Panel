@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nesttask/services/delete_task_service.dart';
-import 'package:nesttask/views/update_task.dart';
+import 'package:nesttask/views/updateTask/update_task.dart';
 import 'package:popover/popover.dart';
 
 import '../config/app_colors.dart';

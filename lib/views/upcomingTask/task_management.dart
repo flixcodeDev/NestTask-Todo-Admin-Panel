@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../config/app_colors.dart';
+import '../../config/app_colors.dart';
 
 class TaskManagementScreen extends StatefulWidget {
   @override
@@ -9,10 +9,11 @@ class TaskManagementScreen extends StatefulWidget {
 }
 
 class _TaskManagementScreenState extends State<TaskManagementScreen> {
-  final DateTime _currentDate = DateTime.now();
+  // final DateTime _currentDate = DateTime.now();
   DateTime _selectedDate = DateTime.now();
   final List<DateTime> _dates = [];
-  late String _formattedMonthYear;
+
+  // late String _formattedMonthYear;
 
   // Use a map to store tasks by date
   final Map<DateTime, List<String>> _tasksByDate = {};
@@ -20,19 +21,19 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
   @override
   void initState() {
     super.initState();
-    _formattedMonthYear = DateFormat('MMMM, yyyy').format(_currentDate);
-    _generateDatesForCurrentMonth();
+    // _formattedMonthYear = DateFormat('MMMM, yyyy').format(_currentDate);
+    // _generateDatesForCurrentMonth();
   }
 
-  void _generateDatesForCurrentMonth() {
-    final startDate = DateTime(_currentDate.year, _currentDate.month, 1);
-    final endDate = DateTime(_currentDate.year, _currentDate.month + 1, 0);
-
-    _dates.clear();
-    for (int i = 0; i < endDate.day; i++) {
-      _dates.add(startDate.add(Duration(days: i)));
-    }
-  }
+  // void _generateDatesForCurrentMonth() {
+  //   final startDate = DateTime(_currentDate.year, _currentDate.month, 1);
+  //   final endDate = DateTime(_currentDate.year, _currentDate.month + 1, 0);
+  //
+  //   _dates.clear();
+  //   for (int i = 0; i < endDate.day; i++) {
+  //     _dates.add(startDate.add(Duration(days: i)));
+  //   }
+  // }
 
   void _addTask(String task, DateTime date) {
     setState(() {
@@ -53,7 +54,7 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -64,7 +65,7 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                   ),
                 ],
                 color: AppColors.whiteColor,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20))),
             height: MediaQuery.of(context).size.height * .33,
@@ -78,13 +79,13 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      _formattedMonthYear,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold, fontSize: 30),
-                    ),
+                    // Text(
+                    //   _formattedMonthYear,
+                    //   style: Theme.of(context)
+                    //       .textTheme
+                    //       .headlineSmall
+                    //       ?.copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+                    // ),
                     TextButton(
                       style: const ButtonStyle(
                         backgroundColor:
@@ -105,7 +106,7 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -124,7 +125,7 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
                             image: isSelected || hasTasks
-                                ? DecorationImage(
+                                ? const DecorationImage(
                                     image:
                                         AssetImage("assets/images/date_bg.png"))
                                 : null,
@@ -143,7 +144,7 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                                       : AppColors.blackColor,
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
                                 DateFormat('d').format(date),
                                 style: TextStyle(
@@ -161,13 +162,13 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                     }).toList(),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ],
             ),
           ),
           Expanded(
             child: tasksForSelectedDate.isEmpty
-                ? Center(
+                ? const Center(
                     child: Text(
                       'No tasks for the selected date.',
                       style: TextStyle(color: Colors.grey),
@@ -177,12 +178,12 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                     itemCount: tasksForSelectedDate.length,
                     itemBuilder: (context, index) {
                       return Card(
-                        margin: EdgeInsets.symmetric(
+                        margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         child: ListTile(
                           title: Text(tasksForSelectedDate[index]),
                           trailing: IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() {
                                 tasksForSelectedDate.removeAt(index);
@@ -208,17 +209,17 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Task'),
+        title: const Text('Add Task'),
         content: TextField(
           controller: _taskController,
-          decoration: InputDecoration(hintText: 'Enter task description'),
+          decoration: const InputDecoration(hintText: 'Enter task description'),
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -227,7 +228,7 @@ class _TaskManagementScreenState extends State<TaskManagementScreen> {
                 Navigator.pop(context);
               }
             },
-            child: Text('Add'),
+            child: const Text('Add'),
           ),
         ],
       ),

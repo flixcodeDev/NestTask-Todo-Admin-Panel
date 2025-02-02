@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:nesttask/config/app_colors.dart';
-import 'package:nesttask/config/app_images.dart';
-import 'package:nesttask/views/dashboard/admin_dashboard.dart';
-import 'package:nesttask/views/home.dart';
+import 'package:nesttask/views/bottomNav/bottom_nav.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 import 'config/app_theme.dart';
-import 'views/create_task.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'NestTask-TODO-Admin Panel',
       theme: lightTheme,
       themeMode: ThemeMode.light,
-      home: HomeScreen(),
+      home: const BottomNav(),
     );
   }
 }
